@@ -1,0 +1,17 @@
+# Build artifacts
+/build
+/out
+
+# Clangd cache
+.cache/
+
+# Debugging
+vgcore.*
+
+# Local files
+.local/
+
+# IDEs configuration
+compile_commands.json
+compile_flags.txt
+.vscode/
