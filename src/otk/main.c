@@ -1,4 +1,123 @@
+#include <kjc_argparse.h>
+
+#include <otk/gen.h>
+
+#include <stdbool.h>
+#include <stdlib.h>
+#include <stdint.h>
 #include <stdio.h>
-int main() {
-    puts("Hello from otk!");
+
+#define SENTINEL SIZE_MAX
+
+#define eprint(fmt, ...) fprintf(stderr, "Error: " fmt "\n", ##__VA_ARGS__)
+
+typedef struct {
+    usize size;
+    const char* out;
+} GenArgs;
+
+typedef struct {
+    const char* file;
+} ResetArgs;
+
+int handle_gen(const GenArgs* args) {
+    printf("size: %zu, output: %s\n", args->size, args->out);
+    return 0;
+}
+
+int handle_reset(const ResetArgs* args) {
+    printf("file: %s\n", args->file);
+    return 0;
+}
+
+int main(int argc, char** argv) {
+    union {
+        GenArgs gen;
+        ResetArgs reset;
+    } args;
+
+    ARGPARSE(argc, argv) {
+        ARG_COMMAND("gen", "Generate a random one-time key with the given size") {
+            args.gen.size = SENTINEL;
+            args.gen.out = NULL;
+
+            ARGPARSE_NESTED {
+				ARG('h', "help", "Help for the gen command") {
+					ARGPARSE_HELP();
+					break;
+				}
+
+                ARG_STRING('o', "output", "The output file path", path) {
+                    if (args.gen.out != NULL) {
+                        eprint("duplicated option: -o/--output");
+                        ARGPARSE_HELP(); return 2;
+                    }
+
+                    args.gen.out = path;
+                }
+
+                ARG_POSITIONAL("<size>", size_str) {
+                    if (args.gen.size != SENTINEL) {
+                        eprint("unexpected positional argument");
+                        ARGPARSE_HELP(); return 2;
+                    }
+
+                    // TODO: parse sizes like 4kb or 128b
+                    //       and handle parse errors
+                    args.gen.size = atoi(size_str);
+                }
+
+                ARG_END {
+                    if (args.gen.size == SENTINEL) {
+                        eprint("size argument unspecified");
+                        ARGPARSE_HELP(); return 2;
+                    }
+
+                    if (args.gen.out == NULL) {
+                        eprint("output file path unspecified");
+                        ARGPARSE_HELP(); return 2;
+                    }
+
+                    return handle_gen(&args.gen);
+                }
+            }
+        }
+
+        ARG_COMMAND("reset", "Reset the cursor of an one-time key") {
+            args.reset.file = NULL;
+
+            ARGPARSE_NESTED {
+                ARG_POSITIONAL("<file>", path) {
+                    if (args.reset.file != NULL) {
+                        eprint("unexpected positonal argument");
+                        ARGPARSE_HELP(); return 2;
+                    }
+
+                    args.reset.file = path;
+                }
+
+                ARG_END {
+                    if (args.reset.file == NULL) {
+                        eprint("target file path unspecified");
+                        ARGPARSE_HELP(); return 2;
+                    }
+
+                    return handle_reset(&args.reset);
+                }
+            }
+        }
+
+        ARG_COMMAND("help", "Print this help message") {
+            ARGPARSE_HELP();
+        }
+
+        ARG('h', "help", "Print this help message") {
+            ARGPARSE_HELP();
+            break;
+        }
+
+		ARG_END {
+			ARGPARSE_HELP();
+		}
+    }
 }

@@ -1,9 +1,11 @@
 include make/directories.mk
 include make/config.mk
 
+KJC_ARGPARSE_SRC := $(DEPS_DIR)/argparse/kjc_argparse.c
+
 # Sources
 LIBOTK_C_SRCS  := $(filter-out $(SRC_DIR)/otk/main.c,$(call rwildcard,$(SRC_DIR)/otk,*.c))
-OTK_MAIN_C_SRC := $(SRC_DIR)/otk/main.c
+OTK_MAIN_C_SRC := $(SRC_DIR)/otk/main.c $(KJC_ARGPARSE_SRC)
 
 LIBOTP_C_SRCS  := $(filter-out $(SRC_DIR)/otp/main.c,$(call rwildcard,$(SRC_DIR)/otp,*.c))
 OTP_MAIN_C_SRC := $(SRC_DIR)/otp/main.c

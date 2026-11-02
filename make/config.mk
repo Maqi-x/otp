@@ -56,7 +56,7 @@ ifeq ($(CCKIND),gcc)
 	WARNINGS += -Werror=discarded-qualifiers
 endif
 
-COMMON_CFLAGS  := $(CSTD) $(WARNINGS) -I$(INCLUDE_DIR)
+COMMON_CFLAGS  := $(CSTD) $(WARNINGS) -I$(INCLUDE_DIR) -I$(DEPS_DIR)/argparse
 COMMON_LDFLAGS := -lm
 
 IS_DEBUG := $(filter debug rel-debug debug-san rel-debug-san,$(BUILD))

@@ -2,6 +2,7 @@ include make/config.mk
 
 SRC_DIR     := src
 INCLUDE_DIR := include
+DEPS_DIR    := deps
 
 OBJ_ROOT_DIR := build/$(BUILD)/obj
 DEP_ROOT_DIR := build/$(BUILD)/dep
