@@ -2,7 +2,6 @@
 
 #include <otk/gen.h>
 
-#include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -21,7 +20,19 @@ typedef struct {
 } ResetArgs;
 
 int handle_gen(const GenArgs* args) {
-    printf("size: %zu, output: %s\n", args->size, args->out);
+    FILE* out = fopen(args->out, "w");
+    if (out == NULL) {
+        perror("fopen");
+        return 1;
+    }
+
+    Otk* otk = otk_generate(args->size);
+    if (otk == NULL) {
+        eprint("key generation failed");
+        return 1;
+    }
+
+    otk_write(otk, args->size, out);
     return 0;
 }
 
