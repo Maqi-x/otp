@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 typedef struct {
-    usize offset;
+    usize cursor;
     byte data[];
 } Otk;
 
