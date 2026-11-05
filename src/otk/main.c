@@ -24,7 +24,7 @@ typedef struct {
 } ResetArgs;
 
 int handle_gen(const GenArgs* args) {
-    FILE* out = fopen(args->out, "w");
+    FILE* out = fopen(args->out, "wb");
     if (out == NULL) {
         eprint("failed to open %s for writing: %s", args->out, strerror(errno));
         return 1;

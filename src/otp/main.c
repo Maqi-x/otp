@@ -20,19 +20,19 @@ typedef struct {
 
 int crypt(Args* args) {
     // TODO: reduce boilerplate
-    FILE* key = fopen(args->key, "r+");
+    FILE* key = fopen(args->key, "r+b");
     if (key == NULL) {
         eprint("failed to open %s for reading: %s", args->key, strerror(errno));
         return 1;
     }
 
-    FILE* in = fopen(args->in, "r");
+    FILE* in = fopen(args->in, "rb");
     if (in == NULL) {
         eprint("failed to open %s for reading: %s", args->in, strerror(errno));
         return 1;
     }
 
-    FILE* out = fopen(args->out, "w");
+    FILE* out = fopen(args->out, "wb");
     if (out == NULL) {
         eprint("failed to open %s for writing: %s", args->out, strerror(errno));
         return 1;
@@ -59,6 +59,8 @@ int crypt(Args* args) {
     otp_crypt(datasize, keysize, data, otk);
 
     fwrite(data, 1, datasize, out);
+
+    rewind(key);
     otk_write(otk, keysize, key);
 
     fclose(in);
