@@ -4,7 +4,11 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 #include <stdio.h>
+
+// used but clangd is stupid (as usual)
+#include <errno.h> // IWYU pragma: keep
 
 #define SENTINEL SIZE_MAX
 
@@ -22,7 +26,7 @@ typedef struct {
 int handle_gen(const GenArgs* args) {
     FILE* out = fopen(args->out, "w");
     if (out == NULL) {
-        perror("fopen");
+        eprint("failed to open %s for writing: %s", args->out, strerror(errno));
         return 1;
     }
 
@@ -33,6 +37,8 @@ int handle_gen(const GenArgs* args) {
     }
 
     otk_write(otk, args->size, out);
+    fclose(out);
+
     return 0;
 }
 

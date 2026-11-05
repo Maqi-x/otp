@@ -8,7 +8,7 @@ LIBOTK_C_SRCS  := $(filter-out $(SRC_DIR)/otk/main.c,$(call rwildcard,$(SRC_DIR)
 OTK_MAIN_C_SRC := $(SRC_DIR)/otk/main.c $(KJC_ARGPARSE_SRC)
 
 LIBOTP_C_SRCS  := $(filter-out $(SRC_DIR)/otp/main.c,$(call rwildcard,$(SRC_DIR)/otp,*.c))
-OTP_MAIN_C_SRC := $(SRC_DIR)/otp/main.c
+OTP_MAIN_C_SRC := $(SRC_DIR)/otp/main.c $(KJC_ARGPARSE_SRC)
 
 ALL_C_SRCS := $(LIBOTK_C_SRCS) $(OTK_MAIN_C_SRC) $(LIBOTP_C_SRCS) $(OTP_MAIN_C_SRC)
 
