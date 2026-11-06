@@ -13,5 +13,6 @@ void otp_crypt(usize datasize, usize keysize, byte* data, Otk* otk) {
     byte* keydata = otk->data + otk->cursor;
     assert(keysize - otk->cursor >= datasize);
 
+    otk->cursor += datasize;
     return otp_raw_crypt(datasize, data, keydata);
 }
